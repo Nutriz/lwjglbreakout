@@ -1,0 +1,64 @@
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+    id 'java'
+}
+
+group 'fr.nutriz'
+version '0.1-ALPHA'
+
+sourceCompatibility = 1.8
+
+project.ext.lwjglVersion = "3.2.1"
+project.ext.jomlVersion = "1.9.12"
+
+switch ( OperatingSystem.current() ) {
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    dependencies {
+        implementation "org.lwjgl:lwjgl:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-assimp:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-bgfx:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-lmdb:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-lz4:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-nanovg:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-nfd:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-nuklear:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-openal:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-remotery:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl-vulkan:$lwjglVersion"
+        runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-assimp:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-bgfx:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-lmdb:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-lz4:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-nanovg:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-nfd:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-nuklear:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-remotery:$lwjglVersion:$lwjglNatives"
+        runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+        //runtimeOnly "org.lwjgl:lwjgl-vulkan:$lwjglVersion:$lwjglNatives"
+        implementation "org.joml:joml:${jomlVersion}"
+    }
+}
