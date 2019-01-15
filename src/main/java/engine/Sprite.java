@@ -1,9 +1,11 @@
 package engine;
 
+import engine.utils.ResourceManager;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -15,6 +17,7 @@ public class Sprite {
     private final int vaoId;
     private final int vboId;
     private final int vertexCount;
+    private Texture texture;
 
     private Vector2f position;
     private Vector2f size;
@@ -27,6 +30,14 @@ public class Sprite {
         size = new Vector2f(width, height);
         this.rotation = rotation;
         this.color = color;
+
+        try {
+            texture = new Texture();
+            ByteBuffer buffer = ResourceManager.getInstance().loadTextureFromFile("/textures/test.png");
+            texture.generate(256, 256, buffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         float[] vertices = new float[]{
                 0.0f, 1.0f, 0.0f, 1.0f,
@@ -65,11 +76,15 @@ public class Sprite {
     }
 
     public void draw() {
+
+        glActiveTexture(GL_TEXTURE0);
+        texture.bind();
         // Bind to the VAO
         glBindVertexArray(vaoId);
         glEnableVertexAttribArray(0);
         // Draw the vertices
         glDrawArrays(GL_TRIANGLES, 0, 6);
+
         // Restore state
         glDisableVertexAttribArray(0);
         glBindVertexArray(0);

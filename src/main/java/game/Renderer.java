@@ -19,7 +19,7 @@ public class Renderer {
 
     public void init() {
 
-        sprite = new Sprite(100, 100, 100, 100, 0, new Vector3f(0, 0, 1));
+        sprite = new Sprite(200, 200, 100, 100, 0, new Vector3f(0, 0, 1));
 
         try {
             shaderProgram = new ShaderProgram();
@@ -44,12 +44,13 @@ public class Renderer {
             Matrix4f modelMatrix = new Matrix4f()
                     .identity()
                     .translate(sprite.getPosition().x, sprite.getPosition().y, 0)
-//                    .rotate(sprite.getRotation())
+                    .rotate(sprite.getRotation(), 0, 0, 1) // TODO fix rotation RAD/DEG
                     .scale(sprite.getSize().x, sprite.getSize().y, 0);
-//                    .translate(-0.5f * sprite.getSize().x, -0.5f * sprite.getSize().y, 0);
 
             shaderProgram.createUniform("modelMatrix");
             shaderProgram.setUniform("modelMatrix", modelMatrix);
+            shaderProgram.createUniform("spriteColor");
+            shaderProgram.setUniform("spriteColor", sprite.getColor());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,9 +1,8 @@
 package engine.utils;
 
 import engine.ShaderProgram;
-import engine.Texture2D;
+import engine.Texture;
 import engine.TextureLoader;
-import org.lwjgl.opengl.GL20;
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
@@ -16,7 +15,7 @@ public class ResourceManager {
     private static ResourceManager instance;
 
     private HashMap<String, ShaderProgram> shaders = new HashMap<>();
-    private HashMap<String, Texture2D> textures = new HashMap<>();
+    private HashMap<String, Texture> textures = new HashMap<>();
 
     public static ResourceManager getInstance() {
         if (instance == null) {
@@ -38,7 +37,7 @@ public class ResourceManager {
         return result;
     }
 
-    private ByteBuffer loadTextureFromFile(String fileName) {
+    public ByteBuffer loadTextureFromFile(String fileName) {
         BufferedImage image = TextureLoader.loadImage(fileName);
         ByteBuffer byteBuffer = TextureLoader.loadTexture(image);
         return byteBuffer;
