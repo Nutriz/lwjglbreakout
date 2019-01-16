@@ -11,5 +11,5 @@ void main()
 {
     vec3 a = spriteColor;
     vec4 pixelFromImage = texture(image, texCoords);
-    fragColor = /*vec4(spriteColor, 1.0) **/ pixelFromImage;
+    fragColor = vec4(spriteColor, 1.0) * pixelFromImage;
 }

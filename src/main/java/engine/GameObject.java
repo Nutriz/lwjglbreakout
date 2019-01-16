@@ -1,23 +1,20 @@
 package engine;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public class GameObject {
 
     private Texture texture;
-    private Vector2f position = new Vector2f(0, 0);
-    private Vector2f size = new Vector2f(64, 64);
+    private Vector2f position;
+    private Vector2f size;
     private Vector2f velocity = new Vector2f(0, 0);
+    private Vector3f color = new Vector3f(1, 1, 1);
     private float scale = 1;
     private float rotation = 0;
 
     private boolean isSolid = false;
     private boolean isDestroyed = false;
-
-
-    public GameObject(Texture sprite) {
-        this.texture = sprite;
-    }
 
     public GameObject(Texture texture, float x, float y, float w, float h) {
         this.texture = texture;
@@ -25,6 +22,16 @@ public class GameObject {
         this.size = new Vector2f(w, h);
     }
 
+    public GameObject(Texture texture, Vector2f pos, Vector2f size, Vector3f color) {
+        this.texture = texture;
+        this.position = new Vector2f(pos.x, pos.y);
+        this.size = new Vector2f(size.x, size.y);
+        this.color = color;
+    }
+
+    public void draw() {
+
+    }
 
     public Vector2f getPosition() {
         return position;
@@ -68,6 +75,14 @@ public class GameObject {
 
     public boolean isSolid() {
         return isSolid;
+    }
+
+    public Vector3f getColor() {
+        return color;
+    }
+
+    public void setColor(Vector3f color) {
+        this.color = color;
     }
 
     public void setSolid(boolean solid) {

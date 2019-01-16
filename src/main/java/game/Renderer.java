@@ -59,7 +59,6 @@ public class Renderer {
             MemoryUtil.memFree(verticesBuffer);
         }
 
-
         try {
             shaderProgram = new ShaderProgram();
             shaderProgram.createVertexShader(ResourceManager.getInstance().loadStringFromFile("/shaders/vertex.glsl"));
@@ -71,13 +70,9 @@ public class Renderer {
     }
 
     public void render(ArrayList<GameObject> gameObjects) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         shaderProgram.bind();
 
-//        sprite.draw();
         for (GameObject gameObject : gameObjects) {
-
             try {
                 shaderProgram.createUniform("projectionMatrix");
                 shaderProgram.setUniform("projectionMatrix", projection);
@@ -90,8 +85,8 @@ public class Renderer {
 
                 shaderProgram.createUniform("modelMatrix");
                 shaderProgram.setUniform("modelMatrix", modelMatrix);
-//                shaderProgram.createUniform("spriteColor");
-//                shaderProgram.setUniform("spriteColor", gameObject.getColor());
+                shaderProgram.createUniform("spriteColor");
+                shaderProgram.setUniform("spriteColor", gameObject.getColor());
             } catch (Exception e) {
                 e.printStackTrace();
             }
