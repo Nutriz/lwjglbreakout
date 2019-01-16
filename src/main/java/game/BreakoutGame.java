@@ -1,10 +1,16 @@
 package game;
 
-import engine.GameLogic;
-import engine.Window;
+import engine.*;
+import engine.utils.ResourceManager;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 public class BreakoutGame implements GameLogic {
 
+    private final ArrayList<GameObject> gameObjects = new ArrayList<>();
     private Renderer renderer;
 
     public static final int WIDTH = 800;
@@ -25,6 +31,15 @@ public class BreakoutGame implements GameLogic {
     @Override
     public void init() {
         renderer.init();
+
+        try {
+            Texture texture = new Texture("/textures/test.png");
+            GameObject gameObject = new GameObject(texture, 100, 100, 50, 50);
+            gameObjects.add(gameObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -39,7 +54,7 @@ public class BreakoutGame implements GameLogic {
 
     @Override
     public void render(Window window) {
-        renderer.render();
+        renderer.render(gameObjects);
     }
 
     @Override

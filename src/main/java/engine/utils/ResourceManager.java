@@ -36,10 +36,4 @@ public class ResourceManager {
 
         return result;
     }
-
-    public ByteBuffer loadTextureFromFile(String fileName) {
-        BufferedImage image = TextureLoader.loadImage(fileName);
-        ByteBuffer byteBuffer = TextureLoader.loadTexture(image);
-        return byteBuffer;
-    }
 }
