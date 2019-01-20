@@ -10,8 +10,6 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -96,7 +94,7 @@ public class Renderer {
         shaderProgram.unbind();
     }
 
-    public void draw(GameObject gameObject) {
+    private void draw(GameObject gameObject) {
 
         glActiveTexture(GL_TEXTURE0);
         gameObject.getTexture().bind();

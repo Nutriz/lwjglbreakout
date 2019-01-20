@@ -24,8 +24,8 @@ public class GameObject {
 
     public GameObject(Texture texture, Vector2f pos, Vector2f size, Vector3f color) {
         this.texture = texture;
-        this.position = new Vector2f(pos.x, pos.y);
-        this.size = new Vector2f(size.x, size.y);
+        this.position = pos;
+        this.size = size;
         this.color = color;
     }
 

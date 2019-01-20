@@ -81,6 +81,10 @@ public class Window {
         setClearColor(0.2f, 0.2f, 0.2f, 0);
     }
 
+    public boolean isKeyPressed(int keyCode) {
+        return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
+    }
+
     public void setClearColor(float r, float g, float b, float alpha) {
         glClearColor(r, g, b, alpha);
     }
