@@ -24,8 +24,6 @@ public class TextureLoader {
 
     public static ByteBuffer loadTexture(BufferedImage image) {
 
-        // TODO fix alpha not working
-
         int imgWidth = image.getWidth();
         int imgHeight = image.getHeight();
         int bytesPerPixel = 4; //4 for RGBA, 3 for RGB
