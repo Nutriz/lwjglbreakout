@@ -6,10 +6,10 @@ import org.joml.Vector3f;
 public class GameObject {
 
     private Texture texture;
-    private Vector2f position;
-    private Vector2f size;
-    private Vector2f velocity = new Vector2f(0, 0);
-    private Vector3f color = new Vector3f(1, 1, 1);
+    protected Vector2f position;
+    protected Vector2f size;
+    protected Vector2f velocity = new Vector2f(0, 0);
+    protected Vector3f color = new Vector3f(1, 1, 1);
     private float scale = 1;
     private float rotation = 0;
 
@@ -27,6 +27,13 @@ public class GameObject {
         this.position = pos;
         this.size = size;
         this.color = color;
+    }
+
+    public GameObject(Texture texture, Vector2f position, Vector2f size, Vector2f velocity) {
+        this.texture = texture;
+        this.position = position;
+        this.size = size;
+        this.velocity = velocity;
     }
 
     public void draw() {

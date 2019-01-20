@@ -68,29 +68,32 @@ public class Renderer {
     }
 
     public void render(ArrayList<GameObject> gameObjects) {
-        shaderProgram.bind();
-
         for (GameObject gameObject : gameObjects) {
-            try {
-                shaderProgram.createUniform("projectionMatrix");
-                shaderProgram.setUniform("projectionMatrix", projection);
-
-                Matrix4f modelMatrix = new Matrix4f()
-                        .identity()
-                        .translate(gameObject.getPosition().x, gameObject.getPosition().y, 0)
-                        .rotate(gameObject.getRotation(), 0, 0, 1) // TODO fix rotation RAD/DEG
-                        .scale(gameObject.getSize().x, gameObject.getSize().y, 0);
-
-                shaderProgram.createUniform("modelMatrix");
-                shaderProgram.setUniform("modelMatrix", modelMatrix);
-                shaderProgram.createUniform("spriteColor");
-                shaderProgram.setUniform("spriteColor", gameObject.getColor());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            this.draw(gameObject);
+            this.render(gameObject);
         }
+    }
+
+    public void render(GameObject gameObject) {
+        shaderProgram.bind();
+        try {
+            shaderProgram.createUniform("projectionMatrix");
+            shaderProgram.setUniform("projectionMatrix", projection);
+
+            Matrix4f modelMatrix = new Matrix4f()
+                    .identity()
+                    .translate(gameObject.getPosition().x, gameObject.getPosition().y, 0)
+                    .rotate(gameObject.getRotation(), 0, 0, 1) // TODO fix rotation RAD/DEG
+                    .scale(gameObject.getSize().x, gameObject.getSize().y, 0);
+
+            shaderProgram.createUniform("modelMatrix");
+            shaderProgram.setUniform("modelMatrix", modelMatrix);
+            shaderProgram.createUniform("spriteColor");
+            shaderProgram.setUniform("spriteColor", gameObject.getColor());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        this.draw(gameObject);
         shaderProgram.unbind();
     }
 
