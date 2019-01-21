@@ -11,16 +11,22 @@ import java.util.List;
 
 public class GameLevel {
 
+    private final ArrayList<String> levelLines;
     private ArrayList<GameObject> bricks = new ArrayList<>();
 
     public GameLevel(String fileName) {
-        ArrayList<String> levelLines = ResourceManager.getInstance().loadLinesFromFile(fileName);
+        levelLines = ResourceManager.getInstance().loadLinesFromFile(fileName);
         this.load(levelLines);
     }
 
     private void load(ArrayList<String> levelString) {
         List<List<Integer>> rows = this.getLevelRows(levelString);
         this.generateBricks(rows);
+    }
+
+    public void reload() {
+        bricks.clear();
+        this.load(levelLines);
     }
 
     private List<List<Integer>> getLevelRows(ArrayList<String> levelString) {
@@ -79,5 +85,16 @@ public class GameLevel {
 
     public ArrayList<GameObject> getBricks() {
         return bricks;
+    }
+
+    public boolean remainsBricksToDestroy() {
+
+        for (GameObject brick : bricks) {
+            if (!brick.isDestroyed() && !brick.isSolid()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

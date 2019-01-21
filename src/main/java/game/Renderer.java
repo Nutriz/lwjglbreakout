@@ -69,7 +69,9 @@ public class Renderer {
 
     public void render(ArrayList<GameObject> gameObjects) {
         for (GameObject gameObject : gameObjects) {
-            this.render(gameObject);
+            if (!gameObject.isDestroyed()) {
+                this.render(gameObject);
+            }
         }
     }
 

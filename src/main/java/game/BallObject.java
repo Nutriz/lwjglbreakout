@@ -11,7 +11,7 @@ public class BallObject extends GameObject {
 
 
     public BallObject(Texture texture, Vector2f pos, float radius, Vector2f velocity) {
-        super(texture, pos, new Vector2f(radius*2, radius*2), velocity);
+        super(texture, pos, new Vector2f(radius*2, radius*2), new Vector2f(velocity));
 
         this.radius = radius;
     }
@@ -32,7 +32,7 @@ public class BallObject extends GameObject {
 
     public void reset(Vector2f position, Vector2f velocity) {
         this.setPosition(position);
-        this.setVelocity(velocity);
+        this.setVelocity(new Vector2f(velocity));
         stuck = true;
     }
 
