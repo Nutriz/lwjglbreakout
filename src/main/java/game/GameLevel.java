@@ -54,7 +54,8 @@ public class GameLevel {
                     Texture texture = this.getTexture(tile);
                     Vector3f color = this.getColor(tile);
 
-                    GameObject brick = new GameObject(texture, pos, brickSize, color);
+                    GameObject brick = new GameObject(pos, brickSize, color);
+                    brick.setTexture(texture);
                     brick.setSolid(tile == 1);
                     bricks.add(brick);
                 }

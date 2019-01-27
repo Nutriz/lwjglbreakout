@@ -1,7 +1,6 @@
 package game;
 
 import engine.GameObject;
-import engine.Texture;
 import org.joml.Vector2f;
 
 public class BallObject extends GameObject {
@@ -10,8 +9,8 @@ public class BallObject extends GameObject {
     private boolean stuck = true;
 
 
-    public BallObject(Texture texture, Vector2f pos, float radius, Vector2f velocity) {
-        super(texture, pos, new Vector2f(radius*2, radius*2), new Vector2f(velocity));
+    public BallObject(Vector2f pos, float radius, Vector2f velocity) {
+        super(pos, new Vector2f(radius*2, radius*2), new Vector2f(velocity));
 
         this.radius = radius;
     }

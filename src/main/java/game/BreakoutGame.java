@@ -22,10 +22,9 @@ public class BreakoutGame implements GameLogic {
     public static final int HEIGHT = 600;
 
     private ArrayList<GameLevel> levels = new ArrayList<>();
-    private int currentLevelIndex;
+    private int currentLevelIndex = 0;
 
     private int direction = 0;
-    private GameObject background;
 
     enum GameState {
         GAME_ACTIVE,
@@ -68,23 +67,29 @@ public class BreakoutGame implements GameLogic {
         ResourceManager.getInstance().loadTexture("/textures/paddle.png", "paddle");
         ResourceManager.getInstance().loadTexture("/textures/awesomeface.png", "ball");
 
+        GameObject background = new GameObject(0, 0, WIDTH, HEIGHT);
+        background.setTexture(ResourceManager.getInstance().getTexture("background"));
+        gameObjects.add(background);
+
         GameLevel levelDebug = new GameLevel("/levels/debug_level.txt");
         levels.add(levelDebug);
+        gameObjects.addAll(levels.get(currentLevelIndex).getBricks());
         // loads levels from 1 to 4
         for (int i = 1; i <= 4; i++) {
             GameLevel level = new GameLevel("/levels/level" + i + ".txt");
             levels.add(level);
         }
 
-        currentLevelIndex = 0;
-
-        background = new GameObject(ResourceManager.getInstance().getTexture("background"), 0, 0, WIDTH, HEIGHT);
-
         Vector2f playerPos = new Vector2f(WIDTH/2 - PLAYER_SIZE.x/2, HEIGHT - PLAYER_SIZE.y);
-        player = new GameObject(ResourceManager.getInstance().getTexture("paddle"), playerPos.x, playerPos.y, PLAYER_SIZE.x, PLAYER_SIZE.y);
+        player = new GameObject(playerPos.x, playerPos.y, PLAYER_SIZE.x, PLAYER_SIZE.y);
+        player.setTexture(ResourceManager.getInstance().getTexture("paddle"));
+        gameObjects.add(player);
 
         Vector2f ballPos = new Vector2f(playerPos.x + PLAYER_SIZE.x/2 - BALL_RADIUS, HEIGHT - PLAYER_SIZE.y - BALL_RADIUS*2);
-        ball = new BallObject(ResourceManager.getInstance().getTexture("ball"), ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY);
+        ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY);
+        ball.setTexture(ResourceManager.getInstance().getTexture("ball"));
+        gameObjects.add(ball);
+
     }
 
     @Override
@@ -138,8 +143,10 @@ public class BreakoutGame implements GameLogic {
         }
 
         if (!levels.get(currentLevelIndex).remainsBricksToDestroy()) {
-            currentLevelIndex++;
             this.resetBall();
+            currentLevelIndex++;
+            gameObjects.addAll(levels.get(currentLevelIndex).getBricks());
+            System.out.println("Go to next level: " + currentLevelIndex);
         }
 
         ball.move(deltaTime);
@@ -157,6 +164,11 @@ public class BreakoutGame implements GameLogic {
                     // collision resolution
                     Direction dir = collision.getDirection();
                     System.out.println("dir: " + dir);
+
+                    if (dir == null) {
+                        dir = Direction.DOWN;
+                    }
+
                     if (dir == Direction.LEFT || dir == Direction.RIGHT) {
                         ball.getVelocity().x = -ball.getVelocity().x;
 
@@ -252,10 +264,7 @@ public class BreakoutGame implements GameLogic {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (state == GameState.GAME_ACTIVE) {
-            renderer.render(background);
-            renderer.render(player);
-            renderer.render(levels.get(currentLevelIndex).getBricks());
-            renderer.render(ball);
+            renderer.render(gameObjects);
         }
     }
 

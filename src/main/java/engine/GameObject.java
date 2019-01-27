@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 
 public class GameObject {
 
-    private Texture texture;
+    private Sprite sprite;
     protected Vector2f position;
     protected Vector2f size;
     protected Vector2f velocity = new Vector2f(0, 0);
@@ -16,28 +16,28 @@ public class GameObject {
     private boolean isSolid = false;
     private boolean isDestroyed = false;
 
-    public GameObject(Texture texture, float x, float y, float w, float h) {
-        this.texture = texture;
+    public GameObject(float x, float y, float w, float h) {
+        this.sprite = new Sprite();
         this.position = new Vector2f(x, y);
         this.size = new Vector2f(w, h);
     }
 
-    public GameObject(Texture texture, Vector2f pos, Vector2f size, Vector3f color) {
-        this.texture = texture;
+    public GameObject(Vector2f pos, Vector2f size, Vector3f color) {
+        this.sprite = new Sprite();
         this.position = pos;
         this.size = size;
         this.color = color;
     }
 
-    public GameObject(Texture texture, Vector2f position, Vector2f size, Vector2f velocity) {
-        this.texture = texture;
+    public GameObject(Vector2f position, Vector2f size, Vector2f velocity) {
+        this.sprite = new Sprite();
         this.position = position;
         this.size = size;
         this.velocity = velocity;
     }
 
     public void draw() {
-
+        sprite.draw();
     }
 
     public Vector2f getPosition() {
@@ -104,7 +104,7 @@ public class GameObject {
         isDestroyed = destroyed;
     }
 
-    public Texture getTexture() {
-        return texture;
+    public void setTexture(Texture texture) {
+        sprite.setTexture(texture);
     }
 }

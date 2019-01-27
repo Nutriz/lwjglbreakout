@@ -1,7 +1,5 @@
 package engine;
 
-import engine.utils.ResourceManager;
-
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
@@ -9,14 +7,14 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
 
-    private int textureId;
+    private int id;
     private int width;
     private int height;
 
     public Texture(String fileName) throws Exception {
 
-        textureId = glGenTextures();
-        if (textureId == 0) {
+        id = glGenTextures();
+        if (id == 0) {
             throw new Exception("Could not create Texture");
         }
 
@@ -30,7 +28,7 @@ public class Texture {
         this.width = width;
         this.height = height;
 
-        glBindTexture(GL_TEXTURE_2D, textureId);
+        glBindTexture(GL_TEXTURE_2D, id);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
@@ -45,7 +43,11 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, textureId);
+    public void cleanup() {
+        glDeleteTextures(id);
+    }
+
+    public int getId() {
+        return id;
     }
 }
