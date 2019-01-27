@@ -1,7 +1,9 @@
 package engine;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
@@ -72,16 +74,33 @@ public class ShaderProgram {
         }
     }
 
-    public void createUniform(String name) throws Exception {
+    public void createUniform(String name) {
         int uniformLocation = glGetUniformLocation(programId, name);
         if (uniformLocation < 0) {
-            throw new Exception("Could not find uniform:" + name);
+            throw new RuntimeException("Could not find uniform:" + name);
         }
         uniforms.put(name, uniformLocation);
     }
 
+
+    public void setUniform(String name, boolean value) {
+        glUniform1i(uniforms.get(name), value ? 1 : 0);
+    }
+
+    public void setUniform(String name, float value) {
+        glUniform1f(uniforms.get(name), value);
+    }
+
+    public void setUniform(String name, Vector2f value) {
+        glUniform2f(uniforms.get(name), value.x, value.y);
+    }
+
     public void setUniform(String name, Vector3f value) {
         glUniform3f(uniforms.get(name), value.x, value.y, value.z);
+    }
+
+    public void setUniform(String name, Vector4f value) {
+        glUniform4f(uniforms.get(name), value.x, value.y, value.z, value.w);
     }
 
     public void setUniform(String name, Matrix4f value) {
@@ -107,4 +126,13 @@ public class ShaderProgram {
         }
     }
 
+    public void setUniform(String name, float[][] value) {
+//        glUniform2fv(uniforms.get(name), value);
+//
+//        try (MemoryStack stack = MemoryStack.stackPush()) {
+//            FloatBuffer buffer = stack.mallocFloat(16);
+//            value.get(buffer);
+//            glUniformMatrix4fv(uniforms.get(name), false, buffer);
+//        }
+    }
 }

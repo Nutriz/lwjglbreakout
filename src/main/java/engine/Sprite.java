@@ -17,7 +17,6 @@ public class Sprite {
     private final int vaoId;
     private final int vboId;
 
-    private int color;
     private Texture texture;
 
     public Sprite() {

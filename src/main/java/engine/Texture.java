@@ -24,6 +24,18 @@ public class Texture {
         this.generate(image.getWidth(), image.getHeight(), byteBuffer);
     }
 
+
+    public Texture(int width, int height) throws Exception {
+
+        id = glGenTextures();
+        if (id == 0) {
+            throw new Exception("Could not create Texture");
+        }
+
+        this.generate(width, height, null);
+    }
+
+
     private void generate(int width, int height, ByteBuffer data) {
         this.width = width;
         this.height = height;

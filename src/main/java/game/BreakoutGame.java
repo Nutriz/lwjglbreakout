@@ -1,6 +1,7 @@
 package game;
 
 import engine.*;
+import engine.graphics.Fbo;
 import engine.utils.ResourceManager;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
@@ -8,7 +9,8 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
 
@@ -26,10 +28,13 @@ public class BreakoutGame implements GameLogic {
 
     private int direction = 0;
 
+    private PostProcessor postProcessor;
+    private float shakeTime = 0.0f;
+
     enum GameState {
         GAME_ACTIVE,
         GAME_MENU,
-        GAME_WIN
+        GAME_WIN;
     }
 
     GameState state = GameState.GAME_ACTIVE;
@@ -41,6 +46,8 @@ public class BreakoutGame implements GameLogic {
     private BallObject ball;
     private static final float BALL_RADIUS = 12.5f;
     private static final Vector2f INITIAL_BALL_VELOCITY = new Vector2f(300, -350);
+
+    private ParticleGenerator particles;
 
     enum Direction {
         UP,
@@ -66,6 +73,7 @@ public class BreakoutGame implements GameLogic {
         ResourceManager.getInstance().loadTexture("/textures/block_solid.png", "block_solid");
         ResourceManager.getInstance().loadTexture("/textures/paddle.png", "paddle");
         ResourceManager.getInstance().loadTexture("/textures/awesomeface.png", "ball");
+        ResourceManager.getInstance().loadTexture("/textures/particle.png", "particle");
 
         GameObject background = new GameObject(0, 0, WIDTH, HEIGHT);
         background.setTexture(ResourceManager.getInstance().getTexture("background"));
@@ -90,6 +98,8 @@ public class BreakoutGame implements GameLogic {
         ball.setTexture(ResourceManager.getInstance().getTexture("ball"));
         gameObjects.add(ball);
 
+        particles = new ParticleGenerator(ResourceManager.getInstance().getTexture("particle"), 500);
+        postProcessor = new PostProcessor();
     }
 
     @Override
@@ -151,6 +161,15 @@ public class BreakoutGame implements GameLogic {
 
         ball.move(deltaTime);
 
+        particles.update(deltaTime, ball, 10, new Vector2f(ball.getSize().x/2, ball.getSize().x/2));
+
+        if (shakeTime > 0) {
+            shakeTime -= deltaTime;
+            if (shakeTime < 0) {
+                postProcessor.setShake(false);
+            }
+        }
+
         this.doCollision();
     }
 
@@ -159,7 +178,13 @@ public class BreakoutGame implements GameLogic {
             if (!brick.isDestroyed()) {
                 Collision collision = this.checkCollision(ball, brick);
                 if (collision.isColliding()) {
-                    brick.setDestroyed(!brick.isSolid());
+
+                    if (!brick.isSolid()) {
+                        brick.setDestroyed(true);
+                    } else {
+                        shakeTime = 0.05f;
+                        postProcessor.setShake(true);
+                    }
 
                     // collision resolution
                     Direction dir = collision.getDirection();
@@ -264,12 +289,32 @@ public class BreakoutGame implements GameLogic {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (state == GameState.GAME_ACTIVE) {
-            renderer.render(gameObjects);
+            postProcessor.startCapture();
+                renderer.render(gameObjects);
+            postProcessor.endCapture();
+            postProcessor.doPostProcessing(glfwGetTime());
+            renderer.renderParticles(particles);
         }
     }
 
     @Override
     public void cleanup() {
         renderer.cleanup();
+        postProcessor.cleanup();
+    }
+
+    public static void checkError(boolean force) {
+        int errorCode = glGetError();
+        if (errorCode != GL_NO_ERROR || force) {
+            switch (errorCode) {
+                case GL_INVALID_ENUM: System.err.println("Error on render loop: GL_INVALID_ENUM"); break;
+                case GL_INVALID_VALUE: System.err.println("Error on render loop: GL_INVALID_VALUE"); break;
+                case GL_INVALID_OPERATION: System.err.println("Error on render loop: GL_INVALID_OPERATION"); break;
+                case GL_STACK_OVERFLOW: System.err.println("Error on render loop: GL_STACK_OVERFLOW"); break;
+                case GL_STACK_UNDERFLOW: System.err.println("Error on render loop: GL_STACK_UNDERFLOW"); break;
+                case GL_OUT_OF_MEMORY: System.err.println("Error on render loop: GL_OUT_OF_MEMORY"); break;
+                case GL_NO_ERROR: System.out.println("Error on render loop: GL_NO_ERROR"); break;
+            }
+        }
     }
 }
